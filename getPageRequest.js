@@ -9,9 +9,6 @@ module.exports = function getPage(href) {
             hostname: link.hostname,
             port: 80,
             method: 'GET',
-            headers: {
-                'Cookie': 'uid=4836786; pass=b7c4f8782513194183fea00106689a04'
-            },
             path: link.path
         };
         let request = http.request(options, (res) => {
