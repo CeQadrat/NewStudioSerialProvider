@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/CeQadrat/NewStudioSerialProvider/issues"
   },
-  "homepage": "https://github.com/CeQadrat/NewStudioSerialProvider#readme"
+  "homepage": "https://github.com/CeQadrat/NewStudioSerialProvider#readme",
+  "dependencies": {
+    "iconv-lite": "^0.4.13"
+  }
 }
