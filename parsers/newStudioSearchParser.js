@@ -6,37 +6,49 @@ module.exports = {
     },
     _parse(page){
         let enableParse = false;
-        let enableParseSerial = false;
-        let serial = {};
-        let allSerials = [];
+        let enableParseText = false;
+        let link;
+        let nextPageLink = null;
+        let episodeList = [];
+        let episode = {};
         let parser = new htmlParser.Parser({
             onopentag: (name, attribs) => {
-                if(name == 'div' && attribs.id == 'serialist'){
+                if (name == 'div' && attribs.class == 'span7') {
                     enableParse = true;
                 }
-                if(name == 'a' && !attribs.class && enableParse){
-                    serial.link = 'http://newstudio.tv'+attribs.href;
-                    enableParseSerial = true;
+                if (name == 'a' && enableParse) {
+                    enableParseText = true;
+                    episode.link = 'http://newstudio.tv' + attribs.href.slice(1);
                 }
-                if(name == 'div' && attribs.class == 'container-fluid'){
-                    enableParse = false;
+                if (name == 'a') {
+                    link = attribs.href;
                 }
             },
             ontext: (text) => {
-                if(enableParseSerial){
-                    serial.name = text;
+                if (enableParseText) {
+                    text = text.split('(')[1].split(')')[0];
+                    let buf = text.split(' ');
+                    episode.season = buf[3] ? buf[1].slice(0, -1) : buf[1];
+                    episode.series = buf[3] ? buf[3] : null;
+                }
+                if (text == 'След.') {
+                    nextPageLink = 'http://newstudio.tv/' + link;
                 }
             },
             onclosetag: (tagname) => {
-                if(tagname == 'a' && enableParseSerial){
-                    enableParseSerial = false;
-                    allSerials.push(serial);
-                    serial = {};
+                if (tagname == 'a' && enableParseText) {
+                    enableParseText = false;
+                    enableParse = false;
+                    episodeList.push(episode);
+                    episode = {};
                 }
             }
         }, {decodeEntities: true});
         parser.write(page);
         parser.end();
-        return allSerials;
+        return {
+            episodeList,
+            nextPageLink
+        };
     }
 };
