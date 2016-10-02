@@ -18,7 +18,7 @@ module.exports = {
                 }
                 if (name == 'a' && enableParse) {
                     enableParseText = true;
-                    episode.link = 'http://newstudio.tv' + attribs.href.slice(1);
+                    episode.links = ['http://newstudio.tv' + attribs.href.slice(1)];
                 }
                 if (name == 'a') {
                     link = attribs.href;
